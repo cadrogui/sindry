@@ -1,0 +1,47 @@
+{
+  "name": "sindri",
+  "version": "1.0.0",
+  "description": "A low overhead structured logs for AWS Lambda.",
+  "main": "index.ts",
+  "scripts": {
+    "build-package": "tsc && cp ./package.json ./lib",
+    "publish": "npm run build-package && npm publish --access=public",
+    "build-test": "tsc",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build-package",
+    "prepublishOnly": "npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src"
+  },
+  "keywords": [
+    "aws",
+    "lambda",
+    "logger",
+    "stream",
+    "json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cadrogui/sindri.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cadrogui/sindri/issues"
+  },
+  "author": "Mikel Carozzi",
+  "license": "MIT",
+  "dependencies": {
+    "aws-lambda": "^1.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.7",
+    "eslint": "^8.26.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^4.8.4"
+  }
+}

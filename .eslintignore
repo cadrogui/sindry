@@ -1,0 +1,27 @@
+.esbuild/* 
+.scannerwork/* 
+.vscode/*
+lib/*
+node_modules/*
+dist/*
+
+__test__/*
+
+# Config ignores 
+
+tsconfig.paths.json
+tsconfig.json
+jest.config.js
+package.json
+package-lock.json
+
+tsconfig.json
+codex/*
+
+src/serializer/*
+
+*.json
+
+# Safe Ignore
+.*/* 
+.*
