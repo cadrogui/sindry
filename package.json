@@ -2,9 +2,12 @@
   "name": "sindri",
   "version": "1.0.0",
   "description": "A low overhead structured logs for AWS Lambda.",
-  "main": "index.ts",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "build-package": "tsc && cp ./package.json ./lib",
+    "build": "webpack",
+    "build-package": "rm -rf lib && tsc && cp ./package.json ./lib",
     "publish": "npm run build-package && npm publish --access=public",
     "build-test": "tsc",
     "format": "prettier --write \"src/**/*.ts\"",
@@ -12,7 +15,10 @@
     "prepare": "npm run build-package",
     "prepublishOnly": "npm run lint",
     "preversion": "npm run lint",
-    "version": "npm run format && git add -A src"
+    "version": "npm run format && git add -A src",
+    "test": "jest ",
+    "test:coverage": "jest --coverage --verbose",
+    "test:runInBand": "jest --runInBand"
   },
   "keywords": [
     "aws",
@@ -30,18 +36,35 @@
   },
   "author": "Mikel Carozzi",
   "license": "MIT",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
   "dependencies": {
-    "aws-lambda": "^1.0.7"
+    "aws-lambda": "^1.0.7",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
   },
   "devDependencies": {
-    "@types/node": "^18.11.7",
+    "@babel/preset-env": "^7.19.4",
+    "@babel/preset-typescript": "^7.18.6",
+    "@types/aws-lambda": "^8.10.108",
+    "@types/jest": "^29.2.1",
+    "@types/node": "^18.11.9",
+    "babel-jest": "^29.2.2",
+    "babel-plugin-istanbul": "^6.1.1",
     "eslint": "^8.26.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-prettier": "^4.2.1",
-    "tslint": "^6.1.3",
-    "tslint-config-prettier": "^1.18.0",
-    "typescript": "^4.8.4"
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "jest": "^29.2.2",
+    "prettier": "^2.3.2",
+    "typescript": "^4.8.4",
+    "webpack": "^5.48.0",
+    "webpack-cli": "^4.7.2"
   }
 }

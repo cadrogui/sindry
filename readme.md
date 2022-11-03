@@ -36,7 +36,7 @@ logger.blacklist = [
 
 #### Transporter
 
-The Transporter class is intended to stream the error object decorated with properties present in the event and context object of the AWS ApiGateway to any desired location, such as: AWS SQS, AWS SNS or an HTTP endpoint, this class was designed in a domain agnostic way, to ensure usability and interdependency. It is also possible to define which type of error level is streamed to each transporter.
+The Transporter class is intended to stream the error object decorated with properties present in the event and context object of the AWS ApiGateway request to any desired location, such as: AWS SQS, AWS SNS or an HTTP endpoint, this class was designed in a domain agnostic way, to ensure usability and interdependency. It is also possible to define which type of error level is streamed to each transporter.
 
 ```
 new Transporter(logger, {
@@ -46,7 +46,7 @@ new Transporter(logger, {
 })
 ```
 
-The register method of the Transporter class receives as arguments any class, but it must have a public method called broadcast, in this scope you can access the scope of the Transporter class as well as the Sindri class, and therefore the event and context belonging to the Lambda invocation, it also receives as optional argument, an object of type ITransporterOptions with the level to be captured to be stramed to the desired location, in this case LEVEL: FATAL or 60
+The register method of the Transporter class receives as arguments any class, but it must have a public method called broadcast, in this scope you can access the scope of the Transporter class as well as the Sindri class, and therefore the event and context belonging to the Lambda invocation, it also receives as optional argument, an object of type ITransporterOptions with the error level to be captured and stramed to the desired location, in this case Level: FATAL or 60
 
 #### Transporter implementation example for AWS SQS
 Bugger.ts
@@ -120,7 +120,7 @@ export enum LEVELS {
     FATAL = 60
 }
 ```
-#### Sindri Error Object
+#### Sindri Structured Error Object
 
 ```
 {

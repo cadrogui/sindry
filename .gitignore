@@ -52,4 +52,5 @@ lib
 codex
 
 scripts/
- .scannerwork
+.scannerwork
+coverage

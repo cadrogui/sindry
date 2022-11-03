@@ -18,6 +18,9 @@ export class LambdaRequestTracker {
      * @param {Context} context - This is the context object that is passed to the Lambda function.
      */
     constructor(private event: APIGatewayProxyEvent, private context: Context) {
+        if (!event) throw new Error('Event must be provided')
+        if (!context) throw new Error('Context must be provided')
+
         this.lambdaRequestContext = {
             awsRequestId: this.context.awsRequestId,
             stage: this.event.requestContext.stage

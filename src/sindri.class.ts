@@ -1,11 +1,11 @@
 import { APIGatewayProxyEvent, Context } from 'aws-lambda';
 import { EventEmitter } from 'events';
 
-import { CloudwatchLogFormatter } from './formatter'
-import { LEVELS } from './enum'
-import { LambdaRequestTracker } from './tracker'
-import { IRequestContext, IStructuredLog, ISindri } from './interfaces'
-import { broadcastMessage } from './symbols'
+import { CloudwatchLogFormatter } from './formatter';
+import { LEVELS } from './enum';
+import { LambdaRequestTracker } from './tracker';
+import { IRequestContext, IStructuredLog, ISindri } from './interfaces';
+import { broadcastMessage } from './symbols';
 
 export class Sindri extends EventEmitter implements ISindri {
     private message: IStructuredLog;
@@ -152,6 +152,8 @@ export class Sindri extends EventEmitter implements ISindri {
      * @returns A boolean value.
      */
     private checkBlackList(blacklist: any, response = {}): boolean {
+        if (!blacklist) return true;
+
         for (const blacklistItem of blacklist) {
             // for (let index = 0; index < blacklist.length; index++) {
             // const blacklistItem = blacklist[index];

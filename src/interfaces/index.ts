@@ -40,6 +40,7 @@ export interface IStructuredLog {
     level: number;
     msg: object;
     placeholder?: string;
+    stage?: string;
 }
 
 export interface ISindri {
@@ -50,12 +51,12 @@ export interface ISindri {
      * @param {object} data
      * @memberof ISindri
      */
-    fatal(msg, placeholder);
-    error(msg, placeholder);
-    warn(msg, placeholder);
-    info(msg, placeholder);
-    debug(msg, placeholder);
-    trace(msg, placeholder);
+    fatal(msg, placeholder): any;
+    error(msg, placeholder): any;
+    warn(msg, placeholder): any;
+    info(msg, placeholder): any;
+    debug(msg, placeholder): any;
+    trace(msg, placeholder): any;
 
     /**
      * Log message to console or stdout
