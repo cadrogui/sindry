@@ -1,11 +1,10 @@
 {
   "name": "sindry",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A low overhead structured logs for AWS Lambda.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "webpack",
     "build-package": "rm -rf lib && tsc && cp ./package.json ./lib",
     "publish": "npm run build-package && npm publish --access=public",
     "build-test": "tsc",
@@ -40,9 +39,7 @@
     "test": "test"
   },
   "dependencies": {
-    "aws-lambda": "^1.0.7",
-    "webpack": "^5.74.0",
-    "webpack-cli": "^4.10.0"
+    "aws-lambda": "^1.0.7"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.19.4",
@@ -63,8 +60,6 @@
     "prettier": "^2.3.2",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^4.8.4",
-    "webpack": "^5.48.0",
-    "webpack-cli": "^4.7.2"
+    "typescript": "^4.8.4"
   }
 }
