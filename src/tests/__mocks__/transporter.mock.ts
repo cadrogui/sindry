@@ -4,6 +4,7 @@ export class TransporterMock {
     private sindri: { _context: Context; _event: APIGatewayProxyEvent; message: any; };
     private externalTransporterOptions: any;
 
+    // tslint:disable-next-line:no-empty
     constructor() { }
 
     /**

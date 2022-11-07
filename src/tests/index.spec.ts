@@ -4,14 +4,12 @@ import { Sindri, Transporter } from '../index'
 import { mockLambdaContext, mockApiGatewayEvent } from './__mocks__'
 import { TransporterMock } from './__mocks__/transporter.mock'
 
-let mockEvent: APIGatewayProxyEvent;
-let mockContext: Context;
 let sindri: Sindri;
+const mockEvent: APIGatewayProxyEvent = mockApiGatewayEvent("http://teleconsulta.com", { id: 0 }, "POST", { proxy: "proxy" }, { authorization: '' }, { userId: "TEST_ID" });
+// tslint:disable-next-line:no-empty
+const mockContext: Context = mockLambdaContext((err, result) => { }, (err) => { });
 
 describe('sindri tests', () => {
-    const mockEvent = mockApiGatewayEvent("http://teleconsulta.com", { id: 0 }, "POST", { proxy: "proxy" }, { authorization: '' }, { userId: "TEST_ID" });
-    const mockContext = mockLambdaContext((err, result) => { }, (err) => { });
-
     sindri = new Sindri()
 
     it('lambda envent should has request context', () => {
