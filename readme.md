@@ -11,7 +11,7 @@ npm i -S sindry
 #### Usage
 
 ```
-import { sindry, Transporter } from 'sindry'
+import { Sindry, Transporter } from 'sindry'
 
 logger = new sindry()
 logger.setTracker(event, context);

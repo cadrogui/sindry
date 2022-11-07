@@ -1,6 +1,6 @@
 // index.spec.ts
 import { APIGatewayProxyEvent, Context } from 'aws-lambda';
-import { Sindry, Transporter } from '../index'
+import { Sindry, Transporter } from '../../index'
 import { mockLambdaContext, mockApiGatewayEvent } from './__mocks__'
 import { TransporterMock } from './__mocks__/transporter.mock'
 
