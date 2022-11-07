@@ -1,8 +1,7 @@
 {
   "name": "sindry",
-  "version": "1.0.2",
+  "version": "1.0.7",
   "description": "A low overhead structured logs for AWS Lambda.",
-  "type": "module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
