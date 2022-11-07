@@ -12,7 +12,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: "sindri.js",
+    filename: "sindry.js",
     library: 'MIT',
     libraryTarget: "umd",
     libraryExport: "default"

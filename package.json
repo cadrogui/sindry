@@ -1,5 +1,5 @@
 {
-  "name": "sindri",
+  "name": "sindry",
   "version": "1.0.0",
   "description": "A low overhead structured logs for AWS Lambda.",
   "type": "module",
@@ -29,10 +29,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cadrogui/sindri.git"
+    "url": "git+https://github.com/cadrogui/sindry.git"
   },
   "bugs": {
-    "url": "https://github.com/cadrogui/sindri/issues"
+    "url": "https://github.com/cadrogui/sindry/issues"
   },
   "author": "Mikel Carozzi",
   "license": "MIT",

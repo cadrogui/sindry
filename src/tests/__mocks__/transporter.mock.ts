@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, Context } from 'aws-lambda';
 
 export class TransporterMock {
-    private sindri: { _context: Context; _event: APIGatewayProxyEvent; message: any; };
+    private sindry: { _context: Context; _event: APIGatewayProxyEvent; message: any; };
     private externalTransporterOptions: any;
 
     // tslint:disable-next-line:no-empty
@@ -26,7 +26,7 @@ export class TransporterMock {
     public async broadcast(): Promise<any> {
         return new Promise(async (resolve, reject) => {
             try {
-                const { _context, _event, message } = this?.sindri
+                const { _context, _event, message } = this?.sindry
 
                 const options = this?.externalTransporterOptions
 

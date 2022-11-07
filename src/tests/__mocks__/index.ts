@@ -3,7 +3,7 @@ import {
     APIGatewayProxyEvent,
     Callback,
     Context
-} from "aws-lambda/index";
+} from "aws-lambda";
 
 /**
  * It creates an APIGatewayProxyEvent object with the given parameters, and fills in the default values

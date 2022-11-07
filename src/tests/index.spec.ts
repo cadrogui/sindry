@@ -1,16 +1,16 @@
 // index.spec.ts
 import { APIGatewayProxyEvent, Context } from 'aws-lambda';
-import { Sindri, Transporter } from '../index'
+import { Sindry, Transporter } from '../index'
 import { mockLambdaContext, mockApiGatewayEvent } from './__mocks__'
 import { TransporterMock } from './__mocks__/transporter.mock'
 
-let sindri: Sindri;
+let sindry: Sindry;
 const mockEvent: APIGatewayProxyEvent = mockApiGatewayEvent("http://teleconsulta.com", { id: 0 }, "POST", { proxy: "proxy" }, { authorization: '' }, { userId: "TEST_ID" });
 // tslint:disable-next-line:no-empty
 const mockContext: Context = mockLambdaContext((err, result) => { }, (err) => { });
 
-describe('sindri tests', () => {
-    sindri = new Sindri()
+describe('sindry tests', () => {
+    sindry = new Sindry()
 
     it('lambda envent should has request context', () => {
         expect(mockEvent).toHaveProperty('requestContext')
@@ -25,7 +25,7 @@ describe('sindri tests', () => {
     })
 
     it('tracker should be initiated without any errors', () => {
-        sindri.setTracker(mockEvent, mockContext)
+        sindry.setTracker(mockEvent, mockContext)
     })
 })
 
@@ -41,7 +41,7 @@ describe('transporter tests', () => {
         }
     ]
 
-    new Transporter(sindri, {
+    new Transporter(sindry, {
         level: 'fatal'
     }).register(TransporterMock, {
         sqsUrl: mockEvent?.stageVariables
@@ -55,42 +55,42 @@ describe('transporter tests', () => {
 
     it('transporter can deliver message whitout blacklist', () => {
         const message = { message: 'mock test whitout blacklist' }
-        sindri.info(message)
-        expect(sindri.structuredLog.msg).toMatchObject(message)
+        sindry.info(message)
+        expect(sindry.structuredLog.msg).toMatchObject(message)
     })
 
     it('transporter can deliver message with blacklist', () => {
         const message = { message: 'mock test whith blacklist' }
-        sindri.blacklist = blacklist
-        sindri.info(message)
-        expect(sindri.structuredLog.msg).toMatchObject(message)
+        sindry.blacklist = blacklist
+        sindry.info(message)
+        expect(sindry.structuredLog.msg).toMatchObject(message)
     })
 })
 
-describe('sindri error object test', () => {
+describe('sindry error object test', () => {
     it('structured error object has awsRequestId property', () => {
-        expect(sindri.structuredLog).toHaveProperty('awsRequestId')
-        expect(sindri.structuredLog.awsRequestId).toBeTruthy()
+        expect(sindry.structuredLog).toHaveProperty('awsRequestId')
+        expect(sindry.structuredLog.awsRequestId).toBeTruthy()
     })
 
     it('structured error object has stage property', () => {
-        expect(sindri.structuredLog).toHaveProperty('stage')
-        expect(sindri.structuredLog.stage).toBeTruthy()
+        expect(sindry.structuredLog).toHaveProperty('stage')
+        expect(sindry.structuredLog.stage).toBeTruthy()
     })
 
     it('structured error object has apiRequestId property', () => {
-        expect(sindri.structuredLog).toHaveProperty('apiRequestId')
-        expect(sindri.structuredLog.apiRequestId).toBeTruthy()
+        expect(sindry.structuredLog).toHaveProperty('apiRequestId')
+        expect(sindry.structuredLog.apiRequestId).toBeTruthy()
     })
 
     it('structured error object has x-correlation-id property', () => {
-        expect(sindri.structuredLog).toHaveProperty('x-correlation-id')
-        expect(sindri.structuredLog['x-correlation-id']).toBeTruthy()
+        expect(sindry.structuredLog).toHaveProperty('x-correlation-id')
+        expect(sindry.structuredLog['x-correlation-id']).toBeTruthy()
     })
 
     it('structured error object has level and its a number', () => {
-        expect(sindri.structuredLog).toHaveProperty('level')
-        expect(sindri.structuredLog.level).toEqual(expect.any(Number));
-        expect(sindri.structuredLog.level).toBeTruthy()
+        expect(sindry.structuredLog).toHaveProperty('level')
+        expect(sindry.structuredLog.level).toEqual(expect.any(Number));
+        expect(sindry.structuredLog.level).toBeTruthy()
     })
 })

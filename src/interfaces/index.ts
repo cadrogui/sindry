@@ -43,13 +43,13 @@ export interface IStructuredLog {
     stage?: string;
 }
 
-export interface ISindri {
+export interface ISindry {
     /**
      * Log message using the incoming buffer
      *
      * @param {string} placeholder
      * @param {object} data
-     * @memberof ISindri
+     * @memberof ISindry
      */
     fatal(msg, placeholder): any;
     error(msg, placeholder): any;
@@ -62,7 +62,7 @@ export interface ISindri {
      * Log message to console or stdout
      *
      * @returns {string} The formatted output which must end with a newline
-     * @memberof ISindri
+     * @memberof ISindry
      */
     structuredLog: IStructuredLog;
 }

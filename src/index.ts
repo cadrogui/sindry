@@ -1,2 +1,2 @@
-export * from './sindri.class'
+export * from './sindry.class'
 export * from './transporter.class'

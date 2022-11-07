@@ -1,4 +1,4 @@
-const broadcastMessage = Symbol('sindri.broadcastMessage')
+const broadcastMessage = Symbol('sindry.broadcastMessage')
 
 export {
     broadcastMessage

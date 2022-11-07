@@ -1,4 +1,4 @@
-import { ILogFormatter, LogData } from '../interfaces/';
+import { ILogFormatter, LogData } from '../interfaces';
 
 /**
  * Formats the log in native cloudwatch format and

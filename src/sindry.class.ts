@@ -4,10 +4,10 @@ import { EventEmitter } from 'events';
 import { CloudwatchLogFormatter } from './formatter';
 import { LEVELS } from './enum';
 import { LambdaRequestTracker } from './tracker';
-import { IRequestContext, IStructuredLog, ISindri } from './interfaces';
+import { IRequestContext, IStructuredLog, ISindry } from './interfaces';
 import { broadcastMessage } from './symbols';
 
-export class Sindri extends EventEmitter implements ISindri {
+export class Sindry extends EventEmitter implements ISindry {
     private message: IStructuredLog;
     private contextTracker: IRequestContext;
     private _event: APIGatewayProxyEvent;
@@ -65,7 +65,7 @@ export class Sindri extends EventEmitter implements ISindri {
             console.log = (...args: any[]): void => {
                 this.defaultLogger.apply(
                     console,
-                    [...[`[Sindri=${LEVELS[level]}]`], ...args]
+                    [...[`[sindry=${LEVELS[level]}]`], ...args]
                 )
             }
         }

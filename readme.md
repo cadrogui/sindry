@@ -5,21 +5,21 @@ A low overhead structured logs for AWS Lambda.
 #### Install
 
 ```
-npm i -S sindri
+npm i -S sindry
 ```
 
 #### Usage
 
 ```
-import { Sindri, Transporter } from 'sindri'
+import { sindry, Transporter } from 'sindry'
 
-logger = new Sindri()
+logger = new sindry()
 logger.setTracker(event, context);
 ```
 
 #### Blacklist
 
-Sindri has an implementation to blacklist array of properties that must be present in the response object, so as not to trigger the Transporter class if it's implemented.
+sindry has an implementation to blacklist array of properties that must be present in the response object, so as not to trigger the Transporter class if it's implemented.
 
 ```
 logger.blacklist = [
@@ -46,7 +46,7 @@ new Transporter(logger, {
 })
 ```
 
-The register method of the Transporter class receives as arguments any class, but it must have a public method called broadcast, in this scope you can access the scope of the Transporter class as well as the Sindri class, and therefore the event and context belonging to the Lambda invocation, it also receives as optional argument, an object of type ITransporterOptions with the error level to be captured and stramed to the desired location, in this case Level: FATAL or 60
+The register method of the Transporter class receives as arguments any class, but it must have a public method called broadcast, in this scope you can access the scope of the Transporter class as well as the sindry class, and therefore the event and context belonging to the Lambda invocation, it also receives as optional argument, an object of type ITransporterOptions with the error level to be captured and stramed to the desired location, in this case Level: FATAL or 60
 
 #### Transporter implementation example for AWS SQS
 Bugger.ts
@@ -58,7 +58,7 @@ import { APIGatewayProxyEvent, Context } from 'aws-lambda';
 export class Bugger {
   private static queue: any;
   private static SQS_ERROR_QUEUE_URL: string;
-  private sindri: { _context: Context; _event: APIGatewayProxyEvent; message: any; };
+  private sindry: { _context: Context; _event: APIGatewayProxyEvent; message: any; };
   private externalTransporterOptions: any;
 
   constructor() {
@@ -93,7 +93,7 @@ export class Bugger {
   public async broadcast(): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
-        const { _context, _event, message } = this?.sindri
+        const { _context, _event, message } = this?.sindry
 
         const options = this?.externalTransporterOptions
         Bugger.SQS_ERROR_QUEUE_URL = options.sqsUrl;
@@ -120,7 +120,7 @@ export enum LEVELS {
     FATAL = 60
 }
 ```
-#### Sindri Structured Error Object
+#### sindry Structured Error Object
 
 ```
 {

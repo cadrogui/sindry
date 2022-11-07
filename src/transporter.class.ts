@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, Context } from 'aws-lambda';
 
-import { Sindri } from "./sindri.class";
+import { Sindry } from "./sindry.class";
 import { broadcastMessage } from './symbols'
 import { errorSerializer } from './serializer'
 import { ITransporter, ITransporterOptions } from './interfaces'
@@ -12,7 +12,7 @@ export class Transporter implements ITransporter {
     private MAX_EVENT_FIRED: number = 5;
     private EVENT_FIRED: number = 0;
 
-    constructor(private sindri: Sindri, public options: ITransporterOptions = { level: '' }) {
+    constructor(private sindry: Sindry, public options: ITransporterOptions = { level: '' }) {
         const _levels = Object.values(LEVELS)
 
         if (!_levels.includes(options.level.toUpperCase())) {
@@ -29,7 +29,7 @@ export class Transporter implements ITransporter {
      * property and calls the `broadcast` function of the `transporter` class
      */
     private listen(): void {
-        this.sindri.on(broadcastMessage, async (data) => {
+        this.sindry.on(broadcastMessage, async (data) => {
             const errorLevel = this.options.level
 
             if (errorLevel.toUpperCase() === LEVELS[data.level] || !errorLevel) {
@@ -40,7 +40,7 @@ export class Transporter implements ITransporter {
                         await new this.transporter().broadcast.call(this)
                     }
                 } catch (error) {
-                    this.sindri.error(error, 'Transporter ERROR')
+                    this.sindry.error(error, 'Transporter ERROR')
                 }
             }
         })
