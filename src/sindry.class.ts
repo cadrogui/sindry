@@ -50,7 +50,7 @@ export class Sindry extends EventEmitter implements ISindry {
     private log(placeholder = '', msg, level): void {
         this.message = { ...this.contextTracker, level, msg, placeholder }
 
-        const awsRequestId = this.contextTracker.apiRequestId;
+        const awsRequestId = this.contextTracker?.apiRequestId;
         const formatter = new CloudwatchLogFormatter;
         const formatedMsg = formatter.format({ placeholder, awsRequestId, level: LEVELS[level], msg })
 
@@ -115,17 +115,24 @@ export class Sindry extends EventEmitter implements ISindry {
     }
 
     /**
-     * It sets the event and context for the LambdaRequestTracker class.
-     * @param {APIGatewayProxyEvent} event - The event parameter is the event that triggered the lambda
-     * function.
-     * @param {Context} context - The context object that the Lambda function receives.
+     * > This function sets the event and context objects, and then creates a new LambdaRequestTracker
+     * object
+     * @param {APIGatewayProxyEvent} event - The event parameter is the input to the handler. It is the
+     * event data that triggered the function.
+     * @param {Context} context - Context - The context object passed to the Lambda function.
      */
-    public setTracker(event: APIGatewayProxyEvent, context: Context) {
+    public setTracker(event: APIGatewayProxyEvent, context: Context): void {
         this._event = event;
         this._context = context;
 
         const tracker = new LambdaRequestTracker(event, context);
         this.contextTracker = tracker.lambdaContext
+
+        // lambda warmer compatibility and error handling
+        // lambda warmer event -> { "warmer":true,"concurrency":3 }
+        if (!event.hasOwnProperty('warmer')) {
+            this.contextTracker.apiRequestId = 'LAMBDA_WARMER_INVOCATION'
+        }
     }
 
     /**
@@ -155,9 +162,6 @@ export class Sindry extends EventEmitter implements ISindry {
         if (!blacklist) return true;
 
         for (const blacklistItem of blacklist) {
-            // for (let index = 0; index < blacklist.length; index++) {
-            // const blacklistItem = blacklist[index];
-
             for (const key in blacklistItem) {
                 if (response.hasOwnProperty(blacklistItem.key) && response[blacklistItem.key] === blacklistItem.value) {
                     return false
