@@ -130,7 +130,7 @@ export class Sindry extends EventEmitter implements ISindry {
 
         // lambda warmer compatibility and error handling
         // lambda warmer event -> { "warmer":true,"concurrency":3 }
-        if (!event.hasOwnProperty('warmer')) {
+        if (event.hasOwnProperty('warmer')) {
             this.contextTracker.apiRequestId = 'LAMBDA_WARMER_INVOCATION'
         }
     }
