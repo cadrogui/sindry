@@ -23,7 +23,7 @@ export class LambdaRequestTracker {
 
         this.lambdaRequestContext = {
             awsRequestId: this.context.awsRequestId,
-            stage: this.event.requestContext.stage
+            stage: this.event.requestContext?.stage
         };
 
         const apiRequestId = this.event.requestContext?.requestId;
