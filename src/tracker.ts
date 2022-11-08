@@ -21,16 +21,12 @@ export class LambdaRequestTracker {
         if (!event) throw new Error('Event must be provided')
         if (!context) throw new Error('Context must be provided')
 
-        this.lambdaRequestContext = {
-            awsRequestId: this.context.awsRequestId,
-            stage: this.event.requestContext?.stage
-        };
-
-        const apiRequestId = this.event.requestContext?.requestId;
-
-        if (apiRequestId) {
-            this.lambdaRequestContext.apiRequestId = apiRequestId;
+        if (this.event.hasOwnProperty('requestContext')) {
+            this.lambdaRequestContext.stage = this.event.requestContext.stage
+            this.lambdaRequestContext.apiRequestId = this.event.requestContext.requestId;
         }
+
+        this.lambdaRequestContext.awsRequestId = this.context?.awsRequestId
 
         if (event.headers) {
             Object.keys(event.headers).forEach((header) => {
