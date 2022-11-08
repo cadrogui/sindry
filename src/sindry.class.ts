@@ -50,7 +50,11 @@ export class Sindry extends EventEmitter implements ISindry {
     private log(placeholder = '', msg, level): void {
         this.message = { ...this.contextTracker, level, msg, placeholder }
 
-        const awsRequestId = this.contextTracker?.apiRequestId;
+        let awsRequestId;
+        if (this.contextTracker && this.contextTracker.hasOwnProperty('apiRequestId')) {
+            awsRequestId = this.contextTracker.apiRequestId;
+        }
+
         const formatter = new CloudwatchLogFormatter;
         const formatedMsg = formatter.format({ placeholder, awsRequestId, level: LEVELS[level], msg })
 

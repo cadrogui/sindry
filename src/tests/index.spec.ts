@@ -29,6 +29,16 @@ describe('sindry tests', () => {
     })
 })
 
+describe('sindry event test', () => {
+    const sindryEvent = new Sindry()
+    const mockEventTest: APIGatewayProxyEvent = mockApiGatewayEvent("http://teleconsulta.com", { id: 0 }, "POST", { proxy: "proxy" }, { authorization: '' }, { userId: "TEST_ID" });
+
+    it('tracker should be initiated with missing event properties', () => {
+        delete mockEventTest.requestContext.requestId
+        sindryEvent.setTracker(mockEventTest, mockContext)
+    })
+})
+
 describe('transporter tests', () => {
     const blacklist = [
         {
