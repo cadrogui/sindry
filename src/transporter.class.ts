@@ -1,5 +1,3 @@
-import { APIGatewayProxyEvent, Context } from 'aws-lambda';
-
 import { Sindry } from "./sindry.class";
 import { broadcastMessage } from './symbols'
 import { errorSerializer } from './serializer'
