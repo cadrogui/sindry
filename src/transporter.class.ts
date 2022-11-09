@@ -40,6 +40,7 @@ export class Transporter implements ITransporter {
                         await new this.transporter().broadcast.call(this)
                     }
                 } catch (error) {
+                    // tslint:disable-next-line:no-console
                     console.error('TRANSPORTER ERROR =>', error)
                     this.sindry.error(error, 'Transporter ERROR')
                 }
