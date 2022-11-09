@@ -1,4 +1,5 @@
-import { APIGatewayProxyEvent, APIGatewayEventRequestContextV2 } from 'aws-lambda/trigger/api-gateway-proxy';
+import { APIGatewayEventDefaultAuthorizerContext } from 'aws-lambda/common/api-gateway';
+import { Context } from 'aws-lambda/handler';
 
 import { IRequestContext } from './interfaces'
 import { writer } from './writer'
@@ -16,13 +17,13 @@ export class LambdaRequestTracker {
     }
 
     /**
-     * The function takes in the event and context objects from the lambda handler and creates a new
-     * object called lambdaRequestContext. The lambdaRequestContext object is used to store the correlation id and other correlation
-     * headers
-     * @param {APIGatewayProxyEvent} event - The event that triggered the Lambda function.
-     * @param {Context} context - This is the context object that is passed to the Lambda function.
+     * The function takes in the event and context objects from the lambda handler and parses them to
+     * extract the correlation id, trace id, and stage
+     * @param {APIGatewayEventDefaultAuthorizerContext} event - This is the event that triggered the
+     * lambda function.
+     * @param {Context} context - This is the AWS Lambda context object.
      */
-    constructor(private event: APIGatewayProxyEvent, private context: APIGatewayEventRequestContextV2) {
+    constructor(private event: APIGatewayEventDefaultAuthorizerContext, private context: Context) {
         try {
             if (!event) throw new Error('Event must be provided')
             if (!context) throw new Error('Context must be provided')
@@ -32,7 +33,7 @@ export class LambdaRequestTracker {
                 this.lambdaRequestContext.apiRequestId = this.event.requestContext.requestId;
             }
 
-            this.lambdaRequestContext.awsRequestId = this.context?.requestId
+            this.lambdaRequestContext.awsRequestId = this.context?.awsRequestId
 
             if (event.headers) {
                 Object.keys(event.headers).forEach((header) => {
@@ -48,7 +49,7 @@ export class LambdaRequestTracker {
             }
 
             if (!this.lambdaRequestContext[CORRELATION_ID]) {
-                this.lambdaRequestContext[CORRELATION_ID] = context.requestId;
+                this.lambdaRequestContext[CORRELATION_ID] = context.awsRequestId;
             }
         } catch (error) {
             writer('TRACKER ERROR => \n ' + error + '\n');
