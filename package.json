@@ -6,7 +6,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build-package": "rm -rf lib && tsc && cp ./package.json ./lib",
-    "publish": "npm run build-package && npm publish --access=public",
+    "publish-package": "npm run build-package && npm publish --access=public",
     "build-test": "tsc",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json",
