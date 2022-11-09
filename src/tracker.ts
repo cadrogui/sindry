@@ -8,7 +8,11 @@ const CORRELATION_ID = `${CORRELATION_HEADER}id`;
 const CORRELATION_TRACE_ID = `${CORRELATION_HEADER}trace-id`;
 
 export class LambdaRequestTracker {
-    private lambdaRequestContext: IRequestContext;
+    private lambdaRequestContext: IRequestContext = {
+        apiRequestId: '',
+        stage: '',
+        'x-correlation-id': ''
+    }
 
     /**
      * The function takes in the event and context objects from the lambda handler and creates a new
