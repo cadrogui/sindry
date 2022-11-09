@@ -6,6 +6,7 @@ import { LEVELS } from './enum';
 import { LambdaRequestTracker } from './tracker';
 import { IRequestContext, IStructuredLog, ISindry } from './interfaces';
 import { broadcastMessage } from './symbols';
+import { writer } from './writer'
 
 export class Sindry extends EventEmitter implements ISindry {
     private message: IStructuredLog;
@@ -73,9 +74,7 @@ export class Sindry extends EventEmitter implements ISindry {
                 )
             }
         }
-
-        // tslint:disable-next-line:no-console
-        console.log(formatedMsg);
+        writer(formatedMsg + '\n');
     }
 
     /**

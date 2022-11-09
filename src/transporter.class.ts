@@ -5,6 +5,7 @@ import { broadcastMessage } from './symbols'
 import { errorSerializer } from './serializer'
 import { ITransporter, ITransporterOptions } from './interfaces'
 import { LEVELS } from './enum'
+import { writer } from './writer'
 
 export class Transporter implements ITransporter {
     private transporter: any;
@@ -40,8 +41,7 @@ export class Transporter implements ITransporter {
                         await new this.transporter().broadcast.call(this)
                     }
                 } catch (error) {
-                    console.error('TRANSPORTER ERROR =>', error)
-                    this.sindry.error(error, 'Transporter ERROR')
+                    writer('Transporter ERROR => \n ' + error + '\n');
                 }
             }
         })
