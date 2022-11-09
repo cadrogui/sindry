@@ -1,4 +1,6 @@
-import { APIGatewayProxyEvent, Context } from 'aws-lambda';
+import { APIGatewayEventDefaultAuthorizerContext } from 'aws-lambda/common/api-gateway';
+import { Context } from 'aws-lambda/handler';
+
 import { EventEmitter } from 'events';
 
 import { CloudwatchLogFormatter } from './formatter';
@@ -11,7 +13,7 @@ import { writer } from './writer'
 export class Sindry extends EventEmitter implements ISindry {
     private message: IStructuredLog;
     private contextTracker: IRequestContext;
-    private _event: APIGatewayProxyEvent;
+    private _event: APIGatewayEventDefaultAuthorizerContext;
     private _context: Context;
     private _blacklist: any[];
     private canDeliverMessage: boolean;
@@ -87,9 +89,9 @@ export class Sindry extends EventEmitter implements ISindry {
 
     /**
      * It sets the event property of the class.
-     * @param {APIGatewayProxyEvent} _event - The event that triggered the lambda function.
+     * @param {APIGatewayEventDefaultAuthorizerContext} _event - The event that triggered the lambda function.
      */
-    public set event(_event: APIGatewayProxyEvent) {
+    public set event(_event: APIGatewayEventDefaultAuthorizerContext) {
         this._event = _event
     }
 
@@ -97,7 +99,7 @@ export class Sindry extends EventEmitter implements ISindry {
      * It returns the event object.
      * @returns The event object
      */
-    public get event(): APIGatewayProxyEvent {
+    public get event(): APIGatewayEventDefaultAuthorizerContext {
         return this._event;
     }
 
@@ -120,11 +122,11 @@ export class Sindry extends EventEmitter implements ISindry {
     /**
      * > This function sets the event and context objects, and then creates a new LambdaRequestTracker
      * object
-     * @param {APIGatewayProxyEvent} event - The event parameter is the input to the handler. It is the
+     * @param {APIGatewayEventDefaultAuthorizerContext} event - The event parameter is the input to the handler. It is the
      * event data that triggered the function.
      * @param {Context} context - Context - The context object passed to the Lambda function.
      */
-    public setTracker(event: APIGatewayProxyEvent, context: Context): void {
+    public setTracker(event: APIGatewayEventDefaultAuthorizerContext, context: Context): void {
         this._event = event;
         this._context = context;
 
