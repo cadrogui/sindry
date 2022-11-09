@@ -1,0 +1,1 @@
+export const writer = process.stdout.write.bind(process.stdout)

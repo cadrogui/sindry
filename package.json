@@ -1,12 +1,12 @@
 {
   "name": "sindry",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "A low overhead structured logs for AWS Lambda.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "build-package": "rm -rf lib && tsc && cp ./package.json ./lib",
-    "publish": "npm run build-package && npm publish --access=public",
+    "publish-package": "npm run build-package && npm publish --access=public",
     "build-test": "tsc",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json",
