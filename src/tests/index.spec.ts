@@ -1,5 +1,5 @@
 // index.spec.ts
-import { APIGatewayProxyEvent, Context } from 'aws-lambda';
+import { APIGatewayProxyEvent, APIGatewayEventRequestContextV2 } from 'aws-lambda/trigger/api-gateway-proxy';
 import { Sindry, Transporter } from '../index'
 import { mockLambdaContext, mockApiGatewayEvent } from './__mocks__'
 import { TransporterMock } from './__mocks__/transporter.mock'
@@ -7,7 +7,7 @@ import { TransporterMock } from './__mocks__/transporter.mock'
 let sindry: Sindry;
 const mockEvent: APIGatewayProxyEvent = mockApiGatewayEvent("http://teleconsulta.com", { id: 0 }, "POST", { proxy: "proxy" }, { authorization: '' }, { userId: "TEST_ID" });
 // tslint:disable-next-line:no-empty
-const mockContext: Context = mockLambdaContext((err, result) => { }, (err) => { });
+const mockContext: APIGatewayEventRequestContextV2 = mockLambdaContext((err, result) => { }, (err) => { });
 const error = new Error('Sindry Error test')
 
 describe('sindry tests', () => {

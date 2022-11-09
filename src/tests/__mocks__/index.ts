@@ -1,9 +1,4 @@
-import {
-    APIGatewayEventRequestContext,
-    APIGatewayProxyEvent,
-    Callback,
-    Context
-} from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayEventRequestContextV2, APIGatewayProxyCallback } from 'aws-lambda/trigger/api-gateway-proxy';
 
 /**
  * It creates an APIGatewayProxyEvent object with the given parameters, and fills in the default values
@@ -30,7 +25,7 @@ export const mockApiGatewayEvent = (
     queryStringParameters?: { [name: string]: string },
     resourcePath?: string,
     stage?: string,
-    requestContext?: APIGatewayEventRequestContext
+    requestContext?: APIGatewayEventRequestContextV2
 ): APIGatewayProxyEvent => {
     return {
         path,
@@ -52,7 +47,7 @@ export const mockApiGatewayEvent = (
             )
             : defaultApiGatewayEventRequestContext(path, resourcePath, method, stage),
         resource: "resource"
-    } as APIGatewayProxyEvent;
+    } as any;
 };
 
 const defaultHeaders = {
@@ -75,7 +70,7 @@ const defaultApiGatewayEventRequestContext = (
     resourcePath?: string,
     method?: string,
     stage?: string
-): APIGatewayEventRequestContext => {
+): APIGatewayEventRequestContextV2 => {
     return {
         accountId: "123456789012",
         apiId: "1234567890",
@@ -90,7 +85,7 @@ const defaultApiGatewayEventRequestContext = (
         requestId: "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
         requestTimeEpoch: new Date().getTime(),
         resourceId: "123456",
-    } as APIGatewayEventRequestContext;
+    } as any;
 };
 
 /**
@@ -102,15 +97,16 @@ const defaultApiGatewayEventRequestContext = (
 export const mockLambdaContext = (
     done?: (error?: Error, result?: any) => void,
     fail?: (err: Error | string) => void
-): Context => {
+): APIGatewayEventRequestContextV2 => {
     const runTime = new Date().getTime();
     const timeout = 60 * 1000;
     return {
+        accountId: '123456789012',
         callbackWaitsForEmptyEventLoop: false,
         functionName: "mockFunctionName",
         invokedFunctionArn: "arn",
         memoryLimitInMB: 128,
-        awsRequestId: "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
+        requestId: "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
         logGroupName: "log_group",
         logStreamName: "log_stream",
         functionVersion: "23",
@@ -120,7 +116,7 @@ export const mockLambdaContext = (
         succeed: () => {
             return;
         }
-    } as unknown as Context;
+    } as unknown as any;
 };
 
 /**
@@ -146,7 +142,7 @@ const defaultFail = (err: Error | string) => {
  * It returns a function that takes an error and a result, and returns nothing
  * @returns A function that takes in an error and a result and returns nothing.
  */
-export const mockCallback = (): Callback => {
+export const mockCallback = (): APIGatewayProxyCallback => {
     return (error?: Error | null | string, result?: any) => {
         return;
     };

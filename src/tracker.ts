@@ -1,4 +1,4 @@
-import { APIGatewayProxyEvent, Context } from 'aws-lambda';
+import { APIGatewayProxyEvent, APIGatewayEventRequestContextV2 } from 'aws-lambda/trigger/api-gateway-proxy';
 
 import { IRequestContext } from './interfaces'
 import { writer } from './writer'
@@ -22,7 +22,7 @@ export class LambdaRequestTracker {
      * @param {APIGatewayProxyEvent} event - The event that triggered the Lambda function.
      * @param {Context} context - This is the context object that is passed to the Lambda function.
      */
-    constructor(private event: APIGatewayProxyEvent, private context: Context) {
+    constructor(private event: APIGatewayProxyEvent, private context: APIGatewayEventRequestContextV2) {
         try {
             if (!event) throw new Error('Event must be provided')
             if (!context) throw new Error('Context must be provided')
@@ -32,7 +32,7 @@ export class LambdaRequestTracker {
                 this.lambdaRequestContext.apiRequestId = this.event.requestContext.requestId;
             }
 
-            this.lambdaRequestContext.awsRequestId = this.context?.awsRequestId
+            this.lambdaRequestContext.awsRequestId = this.context?.requestId
 
             if (event.headers) {
                 Object.keys(event.headers).forEach((header) => {
@@ -48,7 +48,7 @@ export class LambdaRequestTracker {
             }
 
             if (!this.lambdaRequestContext[CORRELATION_ID]) {
-                this.lambdaRequestContext[CORRELATION_ID] = context.awsRequestId;
+                this.lambdaRequestContext[CORRELATION_ID] = context.requestId;
             }
         } catch (error) {
             writer('TRACKER ERROR => \n ' + error + '\n');

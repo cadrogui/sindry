@@ -1,4 +1,4 @@
-import { APIGatewayProxyEvent, Context } from 'aws-lambda';
+import { APIGatewayProxyEvent, APIGatewayEventRequestContextV2 } from 'aws-lambda/trigger/api-gateway-proxy';
 import { EventEmitter } from 'events';
 
 import { CloudwatchLogFormatter } from './formatter';
@@ -12,7 +12,7 @@ export class Sindry extends EventEmitter implements ISindry {
     private message: IStructuredLog;
     private contextTracker: IRequestContext;
     private _event: APIGatewayProxyEvent;
-    private _context: Context;
+    private _context: APIGatewayEventRequestContextV2;
     private _blacklist: any[];
     private canDeliverMessage: boolean;
     // tslint:disable-next-line:no-console
@@ -105,7 +105,7 @@ export class Sindry extends EventEmitter implements ISindry {
      * It sets the context of the class.
      * @param {Context} _context - The context of the application.
      */
-    public set context(_context: Context) {
+    public set context(_context: APIGatewayEventRequestContextV2) {
         this._context = _context
     }
 
@@ -113,7 +113,7 @@ export class Sindry extends EventEmitter implements ISindry {
      * It returns the context of the current object.
      * @returns The context property is being returned.
      */
-    public get context(): Context {
+    public get context(): APIGatewayEventRequestContextV2 {
         return this._context;
     }
 
@@ -124,7 +124,7 @@ export class Sindry extends EventEmitter implements ISindry {
      * event data that triggered the function.
      * @param {Context} context - Context - The context object passed to the Lambda function.
      */
-    public setTracker(event: APIGatewayProxyEvent, context: Context): void {
+    public setTracker(event: APIGatewayProxyEvent, context: APIGatewayEventRequestContextV2): void {
         this._event = event;
         this._context = context;
 
