@@ -8,6 +8,7 @@ let sindry: Sindry;
 const mockEvent: APIGatewayProxyEvent = mockApiGatewayEvent("http://teleconsulta.com", { id: 0 }, "POST", { proxy: "proxy" }, { authorization: '' }, { userId: "TEST_ID" });
 // tslint:disable-next-line:no-empty
 const mockContext: Context = mockLambdaContext((err, result) => { }, (err) => { });
+const error = new Error('Sindry Error test')
 
 describe('sindry tests', () => {
     sindry = new Sindry()

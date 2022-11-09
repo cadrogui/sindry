@@ -27,16 +27,13 @@ export interface ILogFormatter {
 }
 
 export interface IRequestContext {
-    awsRequestId: string;
+    awsRequestId?: string;
     apiRequestId?: string;
     stage?: string;
     'x-correlation-id'?: string;
 }
 
-export interface IStructuredLog {
-    awsRequestId: string;
-    apiRequestId?: string;
-    'x-correlation-id'?: string;
+export interface IStructuredLog extends IRequestContext {
     level: number;
     msg: object;
     placeholder?: string;
