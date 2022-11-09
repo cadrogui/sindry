@@ -28,6 +28,14 @@ describe('sindry tests', () => {
     it('tracker should be initiated without any errors', () => {
         sindry.setTracker(mockEvent, mockContext)
     })
+
+    it('Error object is serialized to json in console.log', () => {
+        sindry.fatal(error, 'SINDRY FATAL ERROR TEST CONSOLE')
+    })
+
+    // it('Error object is serialized to json in structured message', () => {
+    //     console.log(sindry.structuredLog)
+    // })
 })
 
 describe('sindry event test', () => {
