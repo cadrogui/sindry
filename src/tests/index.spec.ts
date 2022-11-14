@@ -1,11 +1,12 @@
-// index.spec.ts
-import { APIGatewayProxyEvent, Context } from 'aws-lambda';
+import { APIGatewayEventDefaultAuthorizerContext } from 'aws-lambda/common/api-gateway';
+import { Context } from 'aws-lambda/handler';
+
 import { Sindry, Transporter } from '../index'
 import { mockLambdaContext, mockApiGatewayEvent } from './__mocks__'
 import { TransporterMock } from './__mocks__/transporter.mock'
 
 let sindry: Sindry;
-const mockEvent: APIGatewayProxyEvent = mockApiGatewayEvent("http://teleconsulta.com", { id: 0 }, "POST", { proxy: "proxy" }, { authorization: '' }, { userId: "TEST_ID" });
+const mockEvent: APIGatewayEventDefaultAuthorizerContext = mockApiGatewayEvent("http://teleconsulta.com", { id: 0 }, "POST", { proxy: "proxy" }, { authorization: '' }, { userId: "TEST_ID" });
 // tslint:disable-next-line:no-empty
 const mockContext: Context = mockLambdaContext((err, result) => { }, (err) => { });
 const error = new Error('Sindry Error test')
@@ -32,15 +33,11 @@ describe('sindry tests', () => {
     it('Error object is serialized to json in console.log', () => {
         sindry.fatal(error, 'SINDRY FATAL ERROR TEST CONSOLE')
     })
-
-    // it('Error object is serialized to json in structured message', () => {
-    //     console.log(sindry.structuredLog)
-    // })
 })
 
 describe('sindry event test', () => {
     const sindryEvent = new Sindry()
-    const mockEventTest: APIGatewayProxyEvent = mockApiGatewayEvent("http://teleconsulta.com", { id: 0 }, "POST", { proxy: "proxy" }, { authorization: '' }, { userId: "TEST_ID" });
+    const mockEventTest: APIGatewayEventDefaultAuthorizerContext = mockApiGatewayEvent("http://teleconsulta.com", { id: 0 }, "POST", { proxy: "proxy" }, { authorization: '' }, { userId: "TEST_ID" });
 
     it('tracker should be initiated with missing event properties', () => {
         delete mockEventTest.requestContext.requestId

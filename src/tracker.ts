@@ -1,4 +1,5 @@
-import { APIGatewayProxyEvent, Context } from 'aws-lambda';
+import { APIGatewayEventDefaultAuthorizerContext } from 'aws-lambda/common/api-gateway';
+import { Context } from 'aws-lambda/handler';
 
 import { IRequestContext } from './interfaces'
 import { writer } from './writer'
@@ -22,7 +23,7 @@ export class LambdaRequestTracker {
      * @param {APIGatewayProxyEvent} event - The event that triggered the Lambda function.
      * @param {Context} context - This is the context object that is passed to the Lambda function.
      */
-    constructor(private event: APIGatewayProxyEvent, private context: Context) {
+    constructor(private event: APIGatewayEventDefaultAuthorizerContext, private context: Context) {
         try {
             if (!event) throw new Error('Event must be provided')
             if (!context) throw new Error('Context must be provided')
