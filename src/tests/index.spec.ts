@@ -1,15 +1,17 @@
 import { APIGatewayEventDefaultAuthorizerContext } from 'aws-lambda/common/api-gateway';
 import { Context } from 'aws-lambda/handler';
+import { EventEmitter } from 'events';
 
-import { Sindry, Transporter } from '../index'
-import { mockLambdaContext, mockApiGatewayEvent } from './__mocks__'
-import { TransporterMock } from './__mocks__/transporter.mock'
+import { Sindry, Transporter, TransporterEvents } from '../index';
+import { mockLambdaContext, mockApiGatewayEvent } from './__mocks__';
+import { TransporterMock } from './__mocks__/transporter.mock';
 
 let sindry: Sindry;
 const mockEvent: APIGatewayEventDefaultAuthorizerContext = mockApiGatewayEvent("http://teleconsulta.com", { id: 0 }, "POST", { proxy: "proxy" }, { authorization: '' }, { userId: "TEST_ID" });
 // tslint:disable-next-line:no-empty
 const mockContext: Context = mockLambdaContext((err, result) => { }, (err) => { });
 const error = new Error('Sindry Error test')
+const eventBus = new TransporterEvents();
 
 describe('sindry tests', () => {
     sindry = new Sindry()
@@ -32,6 +34,12 @@ describe('sindry tests', () => {
 
     it('Error object is serialized to json in console.log', () => {
         sindry.fatal(error, 'SINDRY FATAL ERROR TEST CONSOLE')
+    })
+
+    it('sindry eventBus has emit method', () => {
+        sindry.eventBus = eventBus.error;
+        jest.spyOn(sindry.eventBus, 'emit')
+        expect(typeof sindry.eventBus.emit).toBe("function");
     })
 })
 
@@ -57,15 +65,17 @@ describe('transporter tests', () => {
         }
     ]
 
-    new Transporter(sindry, {
+    const transporter = new Transporter({
         level: 'fatal'
-    }).register(TransporterMock, {
+    })
+
+    transporter.register(TransporterMock, {
         sqsUrl: mockEvent?.stageVariables
     })
 
     it('transporter has a broadcast method', () => {
         const transporterMock = new TransporterMock();
-        const broadcast = jest.spyOn(transporterMock, 'broadcast')
+        jest.spyOn(transporterMock, 'broadcast')
         expect(typeof transporterMock.broadcast).toBe("function");
     })
 
@@ -80,6 +90,12 @@ describe('transporter tests', () => {
         sindry.blacklist = blacklist
         sindry.info(message)
         expect(sindry.structuredLog.msg).toMatchObject(message)
+    })
+
+    it('transporter eventBus has on method', () => {
+        transporter.eventBus = eventBus.error;
+        jest.spyOn(transporter.eventBus, 'on')
+        expect(typeof transporter.eventBus.on).toBe("function");
     })
 })
 

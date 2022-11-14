@@ -1,9 +1,10 @@
-import { APIGatewayProxyEvent, Context } from 'aws-lambda';
+import { APIGatewayEventDefaultAuthorizerContext } from 'aws-lambda/common/api-gateway';
+import { Context } from 'aws-lambda/handler';
+import { EventEmitter } from 'events';
 
-import { Sindry } from "./sindry.class";
 import { broadcastMessage } from './symbols'
 import { errorSerializer } from './serializer'
-import { ITransporter, ITransporterOptions } from './interfaces'
+import { IStructuredLog, ITransporter, ITransporterOptions, ILambdaTransporterEvent } from './interfaces'
 import { LEVELS } from './enum'
 import { writer } from './writer'
 
@@ -12,8 +13,12 @@ export class Transporter implements ITransporter {
     private externalTransporterOptions: any;
     private MAX_EVENT_FIRED: number = 5;
     private EVENT_FIRED: number = 0;
+    private _eventBus: EventEmitter;
+    private _lambdaEvent: APIGatewayEventDefaultAuthorizerContext;
+    private _lambdaContext: Context;
+    private _lambdaErrorMessage: IStructuredLog;
 
-    constructor(private sindry: Sindry, public options: ITransporterOptions = { level: '' }) {
+    constructor(public options: ITransporterOptions = { level: '' }) {
         const _levels = Object.values(LEVELS)
 
         if (!_levels.includes(options.level.toUpperCase())) {
@@ -25,14 +30,20 @@ export class Transporter implements ITransporter {
     }
 
     /**
-     * The function listens for the broadcastMessage event, and when it's fired, it checks if the error
-     * level is the same as the one specified in the options, and if it is, it increments the
-     * EVENT_FIRED variable, and if it's less than the MAX_EVENT_FIRED, it calls the transporter
-     * function
+     * The function listens to the event bus for a broadcast message, and when it receives one, it
+     * checks if the error level is the same as the one specified in the options, and if it is, it
+     * calls the transporter function
+     * @returns the transporter function.
      */
     private listen(): void {
-        this.sindry.on(broadcastMessage, async (data) => {
+        if (!this._eventBus) return
+
+        this._eventBus.on(broadcastMessage, async (data: ILambdaTransporterEvent) => {
             const errorLevel = this.options.level
+
+            this._lambdaEvent = data?.event
+            this._lambdaContext = data?.context
+            this._lambdaErrorMessage = data.message
 
             if (errorLevel.toUpperCase() === LEVELS[data.level] || !errorLevel) {
                 ++this.EVENT_FIRED
@@ -52,6 +63,24 @@ export class Transporter implements ITransporter {
                 }
             }
         })
+    }
+
+    /**
+     * The function takes an event emitter as an argument and assigns it to the private variable
+     * _eventBus
+     * @param {EventEmitter} tevent - EventEmitter - This is the event emitter that will be used to
+     * emit events to the transporter.
+     */
+    public set eventBus(tevent: EventEmitter) {
+        this._eventBus = tevent;
+    }
+
+    /**
+     * It returns the event emitter.
+     * @returns The EventEmitter object.
+     */
+    public get eventBus(): EventEmitter {
+        return this._eventBus;
     }
 
     /**
