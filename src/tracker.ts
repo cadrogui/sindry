@@ -13,7 +13,8 @@ export class LambdaRequestTracker {
     private lambdaRequestContext: IRequestContext = {
         apiRequestId: '',
         stage: '',
-        'x-correlation-id': ''
+        'x-correlation-id': '',
+        awsRequestId: ''
     }
 
     /**

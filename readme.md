@@ -11,15 +11,24 @@ npm i -S sindry
 #### Usage
 
 ```
-import { Sindry, Transporter } from 'sindry'
+import { Sindry, Transporter, TransporterEvents } from 'sindry'
 
 logger = new sindry()
 logger.setTracker(event, context);
 ```
 
+
+#### Event Bus
+For internal comunication sindry use a specific class called TransporterEvents, and only has an EventEmitter for trigger error events.
+
+```
+const eventBus = new TransporterEvents();
+logger.eventBus = eventBus.error;
+```
+
 #### Blacklist
 
-sindry has an implementation to blacklist array of properties that must be present in the response object, so as not to trigger the Transporter class if it's implemented.
+Sindry has an implementation to blacklist array of properties that must be present in the response object, so as not to trigger the Transporter class if it's implemented.
 
 ```
 logger.blacklist = [
@@ -39,11 +48,17 @@ logger.blacklist = [
 The Transporter class is intended to stream the error object decorated with properties present in the event and context object of the AWS ApiGateway request to any desired location, such as: AWS SQS, AWS SNS or an HTTP endpoint, this class was designed in a domain agnostic way, to ensure usability and interdependency. It is also possible to define which type of error level is streamed to each transporter.
 
 ```
-new Transporter(logger, {
-  level: 'fatal'
-}).register(Bugger, {
-  sqsUrl: event.stageVariables.sqs_queue_error
-})
+const transporter = new Transporter({
+  level: 'fatal',
+});
+
+const dlq = event.stageVariables?.sqs_queue_error ?? process.env.LAMBDA_DLQ
+
+transporter.register(Bugger, {
+  sqsUrl: dlq,
+});
+
+transporter.eventBus = eventBus.error;
 ```
 
 The register method of the Transporter class receives as arguments any class, but it must have a public method called broadcast, in this scope you can access the scope of the Transporter class as well as the sindry class, and therefore the event and context belonging to the Lambda invocation, it also receives as optional argument, an object of type ITransporterOptions with the error level to be captured and stramed to the desired location, in this case Level: FATAL or 60
@@ -53,22 +68,29 @@ Bugger.ts
 
 ```
 import AWS from 'aws-sdk';
-import { APIGatewayProxyEvent, Context } from 'aws-lambda';
+import { APIGatewayEventDefaultAuthorizerContext } from 'aws-lambda/common/api-gateway';
+import { Context } from 'aws-lambda/handler';
 
 export class Bugger {
   private static queue: any;
   private static SQS_ERROR_QUEUE_URL: string;
-  private sindry: { _context: Context; _event: APIGatewayProxyEvent; message: any; };
   private externalTransporterOptions: any;
+  private _lambdaEvent: APIGatewayEventDefaultAuthorizerContext;
+  private _lambdaContext: Context;
+  private _lambdaErrorMessage: any;
 
   constructor() {
     Bugger.queue = new AWS.SQS({ apiVersion: '2012-11-05' });
   }
 
-  private static async publish(error: any, lambda: string, event: any): Promise<any> {
+  private static async publish(
+    error: any,
+    lambda: string,
+    event: any,
+  ): Promise<any> {
     try {
       if (!this.SQS_ERROR_QUEUE_URL) {
-        throw Error('No esta definida la url para la cola de errores');
+        throw Error('The queue url is mandatory');
       }
 
       const params = {
@@ -86,6 +108,7 @@ export class Bugger {
 
       return await this.queue.sendMessage(params).promise();
     } catch (error) {
+      console.error('Bugger ERROR =>', error);
       throw error;
     }
   }
@@ -93,18 +116,25 @@ export class Bugger {
   public async broadcast(): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
-        const { _context, _event, message } = this?.sindry
+        const { _lambdaEvent, _lambdaContext, _lambdaErrorMessage } = this;
 
-        const options = this?.externalTransporterOptions
+        const options = this?.externalTransporterOptions;
         Bugger.SQS_ERROR_QUEUE_URL = options.sqsUrl;
 
-        return resolve(await Bugger.publish(message, _context.functionName, _event))
+        return resolve(
+          await Bugger.publish(
+            _lambdaErrorMessage,
+            _lambdaContext.functionName,
+            _lambdaEvent,
+          ),
+        );
       } catch (error) {
-        return reject(error)
+        return reject(error);
       }
-    })
+    });
   }
 }
+
 
 ```
 

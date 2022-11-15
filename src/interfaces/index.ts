@@ -1,3 +1,7 @@
+import { EventEmitter } from 'events';
+import { APIGatewayEventDefaultAuthorizerContext } from 'aws-lambda/common/api-gateway';
+import { Context } from 'aws-lambda/handler';
+
 export interface LambdaContext {
     awsRequestId: string;
 }
@@ -54,6 +58,7 @@ export interface ISindry {
     info(msg, placeholder): any;
     debug(msg, placeholder): any;
     trace(msg, placeholder): any;
+    eventBus: EventEmitter;
 
     /**
      * Log message to console or stdout
@@ -71,4 +76,12 @@ export interface ITransporterOptions {
 export interface ITransporter {
     register(externalTransporter: any, externalTransporterOptions: any);
     options: ITransporterOptions;
+    eventBus: EventEmitter;
+}
+
+export interface ILambdaTransporterEvent {
+    message: any;
+    level: string;
+    context: Context;
+    event: APIGatewayEventDefaultAuthorizerContext
 }

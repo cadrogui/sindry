@@ -1,6 +1,5 @@
 import { APIGatewayEventDefaultAuthorizerContext } from 'aws-lambda/common/api-gateway';
 import { Context } from 'aws-lambda/handler';
-
 import { EventEmitter } from 'events';
 
 import { CloudwatchLogFormatter } from './formatter';
@@ -10,7 +9,7 @@ import { IRequestContext, IStructuredLog, ISindry } from './interfaces';
 import { broadcastMessage } from './symbols';
 import { writer } from './writer'
 
-export class Sindry extends EventEmitter implements ISindry {
+export class Sindry implements ISindry {
     private message: IStructuredLog;
     private contextTracker: IRequestContext;
     private _event: APIGatewayEventDefaultAuthorizerContext;
@@ -19,10 +18,9 @@ export class Sindry extends EventEmitter implements ISindry {
     private canDeliverMessage: boolean;
     // tslint:disable-next-line:no-console
     private defaultLogger: any = console.log;
+    private _eventBus: EventEmitter;
 
     constructor() {
-        super();
-
         process.on('unhandledRejection', (error, promise) => {
             this.error({ error, promise }, "** Unhandled Rejection **");
         });
@@ -64,7 +62,8 @@ export class Sindry extends EventEmitter implements ISindry {
         this.canDeliverMessage = this.checkBlackList(this._blacklist, msg)
 
         if (this.canDeliverMessage) {
-            this.emit(broadcastMessage, { message: this.message, level })
+            if (!this._eventBus) return
+            this._eventBus.emit(broadcastMessage, { message: this.message, level, context: this._context, event: this._event })
         }
 
         if (process.env.DOCORATE_LOGS) {
@@ -77,6 +76,24 @@ export class Sindry extends EventEmitter implements ISindry {
             }
         }
         writer(formatedMsg + '\n');
+    }
+
+    /**
+     * The function takes an event emitter as an argument and assigns it to the private variable
+     * _eventBus
+     * @param {EventEmitter} tevent - EventEmitter - This is the event emitter that will be used to
+     * emit events to the transporter.
+     */
+    public set eventBus(tevent: EventEmitter) {
+        this._eventBus = tevent;
+    }
+
+    /**
+     * It returns the event emitter.
+     * @returns The EventEmitter object.
+     */
+    public get eventBus(): EventEmitter {
+        return this._eventBus;
     }
 
     /**

@@ -1,7 +1,8 @@
-import { APIGatewayProxyEvent, Context } from 'aws-lambda';
+import { APIGatewayEventDefaultAuthorizerContext } from 'aws-lambda/common/api-gateway';
+import { Context } from 'aws-lambda/handler';
 
 export class TransporterMock {
-    private sindry: { _context: Context; _event: APIGatewayProxyEvent; message: any; };
+    private sindry: { _context: Context; _event: APIGatewayEventDefaultAuthorizerContext; message: any; };
     private externalTransporterOptions: any;
 
     // tslint:disable-next-line:no-empty
