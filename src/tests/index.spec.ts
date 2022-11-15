@@ -7,7 +7,7 @@ import { mockLambdaContext, mockApiGatewayEvent } from './__mocks__';
 import { TransporterMock } from './__mocks__/transporter.mock';
 
 let sindry: Sindry;
-const mockEvent: APIGatewayEventDefaultAuthorizerContext = mockApiGatewayEvent("http://teleconsulta.com", { id: 0 }, "POST", { proxy: "proxy" }, { authorization: '' }, { userId: "TEST_ID" });
+const mockEvent: APIGatewayEventDefaultAuthorizerContext = mockApiGatewayEvent("http://teleconsulta.com", "888392", "POST", { proxy: "proxy" }, { authorization: '' }, { userId: "TEST_ID" });
 // tslint:disable-next-line:no-empty
 const mockContext: Context = mockLambdaContext((err, result) => { }, (err) => { });
 const error = new Error('Sindry Error test')
@@ -45,7 +45,7 @@ describe('sindry tests', () => {
 
 describe('sindry event test', () => {
     const sindryEvent = new Sindry()
-    const mockEventTest: APIGatewayEventDefaultAuthorizerContext = mockApiGatewayEvent("http://teleconsulta.com", { id: 0 }, "POST", { proxy: "proxy" }, { authorization: '' }, { userId: "TEST_ID" });
+    const mockEventTest: APIGatewayEventDefaultAuthorizerContext = mockApiGatewayEvent("http://teleconsulta.com", "888392", "POST", { proxy: "proxy" }, { authorization: '' }, { userId: "TEST_ID" });
 
     it('tracker should be initiated with missing event properties', () => {
         delete mockEventTest.requestContext.requestId
